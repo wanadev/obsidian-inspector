@@ -17,6 +17,7 @@ function createListeners() {
 	);
 };
 
+// Build popup UI from data
 function buildPopup(data) {
 	document.getElementById('name').innerHTML = data.name;
 
