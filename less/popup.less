@@ -1,0 +1,60 @@
+body {
+	width: 500px;
+	height: 600px;
+	font-family: "Courier New";
+
+	#name {
+		text-align: center;
+		font-weight: 700;
+	}
+
+	.brick {
+		width: 100%;
+		margin-bottom: 5px;
+	}
+
+	ul, .topUL {
+	  list-style-type: none;
+	}
+
+	.topUL {
+	  margin: 0;
+	  padding: 0;
+	}
+
+	.caret {
+	  cursor: pointer; 
+	  user-select: none; /* Prevent text selection */
+	}
+
+	.caret::before {
+	  content: "\25B6";
+	  color: black;
+	  display: inline-block;
+	  margin-right: 6px;
+	}
+
+	.caret-down::before {
+	  transform: rotate(90deg);
+	}
+
+	.caret-down{
+	  font-weight: 700;
+	}
+
+	.nested {
+	  display: none;
+	}
+
+	.active {
+	  display: block;
+	}
+
+	.property{
+		color: red;
+	}
+
+	.data{
+		font-weight: 700;
+	}
+}
