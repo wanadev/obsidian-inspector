@@ -16,7 +16,6 @@
 		"default_popup": "popup.html"
 	},
 	"permissions": [ "http://*/*", "https://*/*", "file:///*", "contextMenus" ],
-	"devtools_page": "devtools-background.html",
 	"web_accessible_resources": [
 		"js/invader.js"
 	],
