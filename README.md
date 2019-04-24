@@ -5,10 +5,6 @@
 * Install packages with `npm install`
 * `grunt build` to update *release* folder
 
-## Creating package
-
-* `grunt pack` creates two archives (chrome and firefox packages)
-
 ## Installation
 
 ### Google Chrome
@@ -18,4 +14,8 @@
 ### Mozilla Firefox
 
 * Navigate to *about:debugging*, click on *Load Temporary Add-on* and select the *manifest.json* file.
+
+## Creating package
+
+* `grunt pack` creates two archives (chrome and firefox packages)
 

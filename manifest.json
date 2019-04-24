@@ -25,6 +25,6 @@
 	},
 	"manifest_version": 2,
 	"name": "ObsidianInspector",
-	"content_security_policy": "script-src 'self' https://www.googleapis.com/youtube/v3/; object-src 'self'",
+	"content_security_policy": "script-src 'self' object-src 'self'",
 	"version": "0.1"
 }
