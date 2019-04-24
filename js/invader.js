@@ -1,39 +1,38 @@
-setTimeout(function() {    
-    var app = window.app;
-    var data = {};
-    console.log(app);
-    console.log(app.config);
+setTimeout(function() {
+	let app = window.app; // get app data from window (thanks to Obsidian debug mode which stores the app in global window)
+	let data = {};
+	console.log(app);
 
-    data.name = app.name;
+	data.name = app.name;
 
-    var moduleKeys = Object.keys(app.modules);
-    var modules = [];
-    for(var i = 0; i < moduleKeys.length; i++) {
-    	console.log(moduleKeys[i]);
-    	modules.push(moduleKeys[i]);
-    }
-    data.modules = modules;
+	let moduleKeys = Object.keys(app.modules);
+	let modules = [];
+	for(let i = 0; i < moduleKeys.length; i++) {
+		modules.push(moduleKeys[i]);
+	}
+	data.modules = modules;
 
-    var eventSymbols = Object.getOwnPropertySymbols(app.events);
-    var eventsObj = app.events[eventSymbols[0]];
-    var eventKeys = Object.keys(eventsObj);
-    var events = [];
-    for(var i = 0; i < eventKeys.length; i++) {
-    	events.push(eventKeys[i]);
-    }
-    data.events = events;
+	let eventSymbols = Object.getOwnPropertySymbols(app.events);
+	let eventsObj = app.events[eventSymbols[0]];
+	let eventKeys = Object.keys(eventsObj);
+	let events = [];
+	for(let i = 0; i < eventKeys.length; i++) {
+		events.push(eventKeys[i]);
+	}
+	data.events = events;
 
-    var configSymbols = Object.getOwnPropertySymbols(app.config);
+	let configSymbols = Object.getOwnPropertySymbols(app.config);
 	baseConfigObj = app.config[configSymbols[2]];
 	customConfigObj = app.config[configSymbols[3]];
-	var config = {
+	let config = {
 		'base' : baseConfigObj,
 		'custom' : customConfigObj
 	};
 
 	data.config = config;
 
-    document.dispatchEvent(new CustomEvent('obsidianDetails', {
-        'detail': data
-    }));
+	let editorExtensionId = "hbnecabohpdlalamamfokccklhojjcdi";
+
+	chrome.runtime.sendMessage(editorExtensionId ,{query: "obsidianDetails", details: data}, function(response) {}); // Send data back to popup.js
+
 }, 0);

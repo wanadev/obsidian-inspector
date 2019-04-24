@@ -1,10 +1,9 @@
 function initialize() {
-	injectScript();
 	createListeners();
 };
 
 function injectScript() {
-	var s = document.createElement('script');
+	let s = document.createElement('script');
 	s.src = chrome.runtime.getURL('js/invader.js');
 	s.onload = function() {
 		this.remove();
@@ -13,24 +12,16 @@ function injectScript() {
 };
 
 function createListeners() {
-	var details = null;
-
-	document.addEventListener('obsidianDetails', (e) => {
-		details = e.detail;
-	});
+	let details = null;
 
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
-			if(request.query == "obsidianDetails"){
-				sendResponse({"details" : details});
+			sendResponse(true);
+			if(request.query == "popup_open"){
+				injectScript();
 			}
-			/*if(request.query == "popup_open"){
-				sendResponse({"details" : details});
-			}*/
-			return true;
 		}
 	);
 };
 
 initialize();
-
