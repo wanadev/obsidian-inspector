@@ -56,7 +56,7 @@ module.exports = function(grunt) {
 		compress: {
 			main: {
 				options: {
-					archive: 'oldPackages/<%= pkg.short %><%= pkg.version %>.zip'
+					archive: 'build/<%= pkg.short %><%= pkg.version %>.zip'
 				},
 				files: [
 					{src: ['release/**'], dest: '/'}
@@ -64,7 +64,7 @@ module.exports = function(grunt) {
 			},
 			firefox: {
 				options: {
-					archive: 'oldPackages/<%= pkg.short %><%= pkg.version %>_firefox.zip'
+					archive: 'build/<%= pkg.short %><%= pkg.version %>_firefox.zip'
 				},
 				files: [{
 					src: ['**/*'],
@@ -82,7 +82,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.registerTask('default', ['less']);
-	grunt.registerTask('build', ['copy'/*, 'uglify'*/, 'less']);
+	grunt.registerTask('build', ['copy', 'less']);
 	grunt.registerTask('pack', ['compress']);
-	grunt.registerTask('release', ['copy'/*, 'uglify'*/, 'less', 'compress']);
+	grunt.registerTask('release', ['copy', 'less', 'compress']);
 };

@@ -5,6 +5,10 @@
 * Install packages with `npm install`
 * `grunt build` to update *release* folder
 
+## Creating package
+
+* `grunt pack` creates two archives (chrome and firefox packages)
+
 ## Installation
 
 ### Google Chrome
