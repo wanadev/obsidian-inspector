@@ -16,14 +16,11 @@
 		"default_popup": "popup.html"
 	},
 	"permissions": [ "http://*/*", "https://*/*", "file:///*", "contextMenus" ],
-	"web_accessible_resources": [
-		"js/invader.js"
-	],
 	"externally_connectable": {
 		"matches": ["*://localhost/*"]
 	},
 	"manifest_version": 2,
 	"name": "ObsidianInspector",
-	"content_security_policy": "script-src 'self' object-src 'self'",
+	"content_security_policy": "script-src 'self'; object-src 'self'",
 	"version": "0.1"
 }
