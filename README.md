@@ -31,5 +31,5 @@
 
 ## Creating package
 
-* `grunt pack` creates two archives (chrome and firefox packages)
+* `grunt pack` creates two archives (chrome and firefox packages) in `build/`
 
