@@ -5,12 +5,12 @@
 * Installed modules
 * Registered events
 * Configurations
-* Structures (if dataStore module is installed)
-* History (if history module is installed)
+* Structures ( if dataStore module is installed )
+* History ( if history module is installed )
 	- maxLength
 	- pointer
 	- snapshots
-* Stonejs (if stonejs module is installed)
+* Stonejs ( if stonejs module is installed )
 	- locale
 	- registered catalogs
 
