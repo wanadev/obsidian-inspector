@@ -1,5 +1,19 @@
 # Obsidian Inspector (browser extension) - Easily inspect Obsidian Framework
 
+## Features
+
+* Installed modules
+* Registered events
+* Configurations
+* Structures (if dataStore module is installed)
+* History (if history module is installed)
+	- maxLength
+	- pointer
+	- snapshots
+* Stonejs (if stonejs module is installed)
+	- locale
+	- registered catalogs
+
 ## Building
 
 * Install packages with `npm install`
