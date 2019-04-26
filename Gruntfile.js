@@ -38,21 +38,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		/*uglify: {
-			main: {
-				files: [{
-					expand: true,
-					src: 'js/*.js',
-					dest: 'release/'
-				},
-				{
-					expand: true,
-					src: 'vendors/*.js',
-					dest: 'release/'
-				}]
-			}
-		},*/
-
 		compress: {
 			main: {
 				options: {
@@ -78,7 +63,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-compress');
 	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.registerTask('default', ['less']);
