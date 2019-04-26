@@ -19,6 +19,7 @@ function createListeners() {
 
 // Build popup UI from data
 function buildPopup(data) {
+	console.log("Building popup...", data);
 	document.getElementById('name').innerHTML = data.name;
 
 	let modDrowdown = createDropdown(data.modules, "Modules");
@@ -30,7 +31,24 @@ function buildPopup(data) {
 	let configDrowdown = createDropdown(data.config, "Configurations");
 	document.getElementById('configs').appendChild(configDrowdown);
 
+	if(data.structures){
+		let structuresDrowdown = createDropdown(data.structures, "Structures");
+		document.getElementById('structures').appendChild(structuresDrowdown);
+	}
+
+	if(data.history){
+		let historyDrowdown = createDropdown(data.history, "History");
+		document.getElementById('history').appendChild(historyDrowdown);
+	}
+
+	if(data.stonejs){
+		let stonejsDrowdown = createDropdown(data.stonejs, "stonejs");
+		document.getElementById('stonejs').appendChild(stonejsDrowdown);
+	}
+
 	createDropdownsListeners();
+
+	console.log("Done!");
 };
 
 function createDropdown(data, title) {
@@ -40,6 +58,9 @@ function createDropdown(data, title) {
 	let span = document.createElement("SPAN");
 	span.classList.add("caret");
 	span.innerHTML = title;
+	if(Array.isArray(data)){
+		span.innerHTML += "(" + data.length + ")";
+	}
 	li.appendChild(span);
 	ul.appendChild(li);
 
@@ -55,11 +76,22 @@ function createUL(data) {
 	ul.classList.add("nested");
 
 	if(Array.isArray(data)) {
-		for(let i = 0; i < data.length; i++) {
+		if(data.length !== 0 && typeof data[0] === "object" && data[0] !== null){
+			for(let i = 0; i < data.length; i++) {
+				ul = createUL(data[i]);
+			}
+		} else if(data.length !== 0) {
+			for(let i = 0; i < data.length; i++) {
+				let li = document.createElement('LI');
+				li.innerHTML = "<span class='property'>" + data[i] + "</span>";
+				ul.appendChild(li);
+			}
+		} else {
 			let li = document.createElement('LI');
-			li.innerHTML = "<span class='property'>" + data[i] + "</span>";
+			li.innerHTML = "<span class='property'>" + data[i] + "</span><span class='data'>[]</span>";
 			ul.appendChild(li);
 		}
+		
 	} else if((typeof data === "object") && (data !== null)){
 		for(let dat in data) {
 			let li2 = document.createElement('LI');
@@ -71,7 +103,11 @@ function createUL(data) {
 
 			if((typeof data[dat] === "object") && (data[dat] !== null)){
 				if(isEmpty(data[dat])) {
-					span.innerHTML = span.innerHTML + " : <span class='data'>{}</span>";
+					if(Array.isArray(data[dat])){
+						span.innerHTML = span.innerHTML + " : <span class='data'>[]</span>";
+					} else {
+						span.innerHTML = span.innerHTML + " : <span class='data'>{}</span>";
+					}
 					span.classList.remove("caret");
 				} else {
 					let subUl = createUL(data[dat]);

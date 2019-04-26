@@ -8,7 +8,7 @@ function createListeners() {
 	// Wait for popup_open event to inject script into visited webpage
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
-			sendResponse("OK");
+			sendResponse("Gathering data...");
 			if(request.query == "popup_open"){
 				executeInPage(getData, false, chrome.runtime.id);
 			}
@@ -18,11 +18,17 @@ function createListeners() {
 
 // Function to inject on obsidian page to retrive data
 function getData(extensionId) {
+	if(!window.app){
+		return;
+	}
 	let app = window.app; // get app data from window (thanks to Obsidian debug mode which stores the app in global window)
+	
+	//console.log(app);
 	let data = {};
 
 	data.name = app.name; // Get app's name
 
+	// Retrieve installed modules
 	let moduleKeys = Object.keys(app.modules); // Get installed modules
 	let modules = [];
 	for(let i = 0; i < moduleKeys.length; i++) {
@@ -30,6 +36,7 @@ function getData(extensionId) {
 	}
 	data.modules = modules;
 
+	// Retrieve registered events
 	let eventSymbols = Object.getOwnPropertySymbols(app.events); // Get registered events
 	let eventsObj = app.events[eventSymbols[0]];
 	let eventKeys = Object.keys(eventsObj);
@@ -39,6 +46,7 @@ function getData(extensionId) {
 	}
 	data.events = events;
 
+	// Retrieve configurations infos
 	let configSymbols = Object.getOwnPropertySymbols(app.config);  // Get app's configs
 	baseConfigObj = app.config[configSymbols[2]];
 	customConfigObj = app.config[configSymbols[3]];
@@ -46,9 +54,44 @@ function getData(extensionId) {
 		'base' : baseConfigObj,
 		'custom' : customConfigObj
 	};
-
 	data.config = config;
 
+	// Retrieve dataStore infos if dataStore module is installed
+	if(app.modules.dataStore){
+		let structuresElements = app.modules.dataStore.listEntities();
+		let structures = {};
+		for(let i = 0; i < structuresElements.length; i++) {
+			if(structuresElements[i].name){
+				structures[structuresElements[i].name] = structuresElements[i];
+			} else {
+				structures[structuresElements[i].id] = structuresElements[i];
+			}
+			
+		}
+		data.structures = structures;
+	}
+
+	// Retrieve history infos if history module is installed
+	if(app.modules.history) {
+		let history = {};
+		history.maxLength = app.modules.history.maxLength;
+		history.pointer = app.modules.history.pointer;
+		history.snapshots = {};
+		for(let i = 0; i < app.modules.history.snapshots.length; i++){
+			history.snapshots[i] = app.modules.history.snapshots[i];
+		}
+		data.history = history;
+	}
+
+	// Retrieve stonejs infos if stonejs module is installed
+	if(app.modules.stonejs){
+		let stonejs = {};
+		stonejs.locale = app.modules.stonejs.getLocale();
+		stonejs.catalogs = app.modules.stonejs.listCatalogs();
+		data.stonejs = stonejs;
+	}
+
+	// Send back all gathered infos to extension's popup.js
 	chrome.runtime.sendMessage(document.scripts.obsInspector.dataset.dataId ,{query: "obsidianDetails", details: data}, function(response) {}); // Send data back to popup.js
 };
 
@@ -110,7 +153,7 @@ function executeInPage(functionToRunInPage, leaveInPage, id) {
         newScript.dataset.dataId = id;
     }
     var args = [];
-    for(var index=3;index<arguments.length;index++){
+    for(var index = 3;index < arguments.length; index++){
         args.push(arguments[index]);
     }
     newScript.textContent = '(' + functionToRunInPage.toString() + ').apply(null,'
