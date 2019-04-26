@@ -46,6 +46,9 @@ function buildPopup(data) {
 		document.getElementById('stonejs').appendChild(stonejsDrowdown);
 	}
 
+	let colorDrowdown = createDropdown(data.colors, "Colors");
+	document.getElementById('colors').appendChild(colorDrowdown);
+
 	createDropdownsListeners();
 
 	console.log("Done!");
@@ -70,6 +73,24 @@ function createDropdown(data, title) {
 	return ul;
 };
 
+function createColorSquare(color, name){
+	let container = document.createElement("SPAN");
+	let prop = document.createElement("SPAN");
+	prop.classList.add("property");
+	prop.innerHTML = name + " : ";
+	let data = document.createElement("SPAN");
+	data.classList.add("colorSquare");
+	data.innerHTML = " ";
+	data.style.backgroundColor = color;
+	let afterData = document.createElement("SPAN");
+	afterData.innerHTML = " " + color;
+	
+	container.append(prop);
+	container.append(data);
+	container.append(afterData);
+	return container;
+};
+
 function createUL(data) {
 	let ul = document.createElement("UL");
 	ul.classList.add("subUL");
@@ -91,7 +112,6 @@ function createUL(data) {
 			li.innerHTML = "<span class='property'>" + data[i] + "</span><span class='data'>[]</span>";
 			ul.appendChild(li);
 		}
-		
 	} else if((typeof data === "object") && (data !== null)){
 		for(let dat in data) {
 			let li2 = document.createElement('LI');
@@ -114,8 +134,14 @@ function createUL(data) {
 					li2.appendChild(subUl);
 				}
 			} else {
-				span.innerHTML = span.innerHTML + " : <span class='data'>" + data[dat] + "</span>";
-				span.classList.remove("caret");
+				if(isColor(data[dat])){
+					li2.removeChild(li2.firstChild);
+					span = createColorSquare(data[dat], dat);
+					li2.appendChild(span);
+				} else {
+					span.innerHTML = span.innerHTML + " : <span class='data'>" + data[dat] + "</span>";
+					span.classList.remove("caret");
+				}
 			}			
 		}
 	}
@@ -130,6 +156,37 @@ function isEmpty(obj) {
 	}
 	return true;
 };
+
+function isColor(color) {
+
+	console.log(typeof color);
+
+	if(typeof color !== "string"){
+		return false;
+	}
+	console.log("COLOR", color);
+
+	color = color.replace(/\s/g, '');
+	color = color.toLowerCase();
+
+	let isColor = false;
+	let regExps = {
+		hex : /^#?([a-f\d]{3}|[a-f\d]{6})$/,
+		rgb: /^rgb\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)\)$/,
+		hsl: /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/,
+		hsla: /^hsla\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%,(0?\.\d|1(\.0)?)\)$/,
+		rgba: /^rgba\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0?\.\d|1(\.0)?)\)$/
+	};
+
+	for(let reg in regExps) {
+		let re = new RegExp(regExps[reg]);
+		if(re.test(color)){
+			isColor = true;
+		}
+	}
+
+	return isColor;
+}
 
 function createDropdownsListeners() {
 	let toggler = document.getElementsByClassName("caret");
