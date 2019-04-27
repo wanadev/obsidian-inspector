@@ -20,34 +20,32 @@ function createListeners() {
 // Build popup UI from data
 function buildPopup(data) {
 	console.log("Building popup...", data);
+	var body = document.body;
 	document.getElementById('name').innerHTML = data.name;
 
 	let modDrowdown = createDropdown(data.modules, "Modules");
-	document.getElementById('modules').appendChild(modDrowdown);
+	body.appendChild(modDrowdown);
 
 	let eventsDrowdown = createDropdown(data.events, "Events");
-	document.getElementById('events').appendChild(eventsDrowdown);
+	body.appendChild(eventsDrowdown);
 
 	let configDrowdown = createDropdown(data.config, "Configurations");
-	document.getElementById('configs').appendChild(configDrowdown);
+	body.appendChild(configDrowdown);
 
 	if(data.structures){
 		let structuresDrowdown = createDropdown(data.structures, "Structures");
-		document.getElementById('structures').appendChild(structuresDrowdown);
+		body.appendChild(structuresDrowdown);
 	}
 
 	if(data.history){
 		let historyDrowdown = createDropdown(data.history, "History");
-		document.getElementById('history').appendChild(historyDrowdown);
+		body.appendChild(historyDrowdown);
 	}
 
 	if(data.stonejs){
 		let stonejsDrowdown = createDropdown(data.stonejs, "stonejs");
-		document.getElementById('stonejs').appendChild(stonejsDrowdown);
+		body.appendChild(stonejsDrowdown);
 	}
-
-	let colorDrowdown = createDropdown(data.colors, "Colors");
-	document.getElementById('colors').appendChild(colorDrowdown);
 
 	createDropdownsListeners();
 
@@ -55,10 +53,12 @@ function buildPopup(data) {
 };
 
 function createDropdown(data, title) {
-	let ul = document.createElement("UL");
+	let div = document.createElement("div");
+	div.id = title.toLowerCase();
+	let ul = document.createElement("ul");
 	ul.classList.add("topUL");
-	let li = document.createElement("LI");
-	let span = document.createElement("SPAN");
+	let li = document.createElement("li");
+	let span = document.createElement("span");
 	span.classList.add("caret");
 	span.innerHTML = title;
 	if(Array.isArray(data)){
@@ -69,31 +69,13 @@ function createDropdown(data, title) {
 
 	let ul2 = createUL(data);
 	li.appendChild(ul2);
+	div.appendChild(ul);
 
-	return ul;
-};
-
-function createColorSquare(color, name){
-	let container = document.createElement("SPAN");
-	let prop = document.createElement("SPAN");
-	prop.classList.add("property");
-	prop.innerHTML = name + " : ";
-	let data = document.createElement("SPAN");
-	data.classList.add("colorSquare");
-	data.innerHTML = " ";
-	data.style.backgroundColor = color;
-	let afterData = document.createElement("SPAN");
-	afterData.innerHTML = " " + color;
-	
-	container.append(prop);
-	container.append(data);
-	container.append(afterData);
-	return container;
+	return div;
 };
 
 function createUL(data) {
-	let ul = document.createElement("UL");
-	ul.classList.add("subUL");
+	let ul = document.createElement("ul");
 	ul.classList.add("nested");
 
 	if(Array.isArray(data)) {
@@ -103,26 +85,26 @@ function createUL(data) {
 			}
 		} else if(data.length !== 0) {
 			for(let i = 0; i < data.length; i++) {
-				let li = document.createElement('LI');
+				let li = document.createElement('li');
 				li.innerHTML = "<span class='property'>" + data[i] + "</span>";
 				ul.appendChild(li);
 			}
 		} else {
-			let li = document.createElement('LI');
+			let li = document.createElement('li');
 			li.innerHTML = "<span class='property'>" + data[i] + "</span><span class='data'>[]</span>";
 			ul.appendChild(li);
 		}
 	} else if((typeof data === "object") && (data !== null)){
 		for(let dat in data) {
-			let li2 = document.createElement('LI');
+			let li2 = document.createElement('li');
 			ul.appendChild(li2);
-			let span = document.createElement("SPAN");
+			let span = document.createElement("span");
 			span.classList.add("caret");
 			span.innerHTML = "<span class='property'>" + dat + "</span>";
 			li2.appendChild(span);
 
 			if((typeof data[dat] === "object") && (data[dat] !== null)){
-				if(isEmpty(data[dat])) {
+				if(isObjectEmpty(data[dat])) {
 					if(Array.isArray(data[dat])){
 						span.innerHTML = span.innerHTML + " : <span class='data'>[]</span>";
 					} else {
@@ -149,7 +131,7 @@ function createUL(data) {
 	return ul;
 };
 
-function isEmpty(obj) {
+function isObjectEmpty(obj) {
 	for(let key in obj) {
 		if(obj.hasOwnProperty(key))
 			return false;
@@ -157,20 +139,35 @@ function isEmpty(obj) {
 	return true;
 };
 
-function isColor(color) {
+function createColorSquare(color, name){
+	let container = document.createElement("span");
+	let prop = document.createElement("span");
+	prop.classList.add("property");
+	prop.innerHTML = name + " : ";
+	let data = document.createElement("span");
+	data.classList.add("colorSquare");
+	data.innerHTML = " ";
+	data.style.backgroundColor = color;
+	let afterData = document.createElement("span");
+	afterData.innerHTML = " " + color;
+	
+	container.append(prop);
+	container.append(data);
+	container.append(afterData);
+	return container;
+};
 
-	console.log(typeof color);
+function isColor(color) {
 
 	if(typeof color !== "string"){
 		return false;
 	}
-	console.log("COLOR", color);
 
 	color = color.replace(/\s/g, '');
 	color = color.toLowerCase();
 
 	let isColor = false;
-	let regExps = {
+	let regExps = { // TODO figure out why hsl and hsla are not working
 		hex : /^#?([a-f\d]{3}|[a-f\d]{6})$/,
 		rgb: /^rgb\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)\)$/,
 		hsl: /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/,
@@ -186,7 +183,7 @@ function isColor(color) {
 	}
 
 	return isColor;
-}
+};
 
 function createDropdownsListeners() {
 	let toggler = document.getElementsByClassName("caret");

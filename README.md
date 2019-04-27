@@ -1,4 +1,4 @@
-# Obsidian Inspector (browser extension) - Easily inspect Obsidian Framework
+## Obsidian Inspector (browser extension) - Easily inspect Obsidian Framework
 
 ## Features
 
@@ -12,6 +12,7 @@
 	- snapshots
 * Stonejs ( if stonejs module is installed )
 	- locale
+	- Guessed User Language
 	- registered catalogs
 
 ## Building

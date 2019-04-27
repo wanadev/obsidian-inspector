@@ -88,16 +88,9 @@ function getData(extensionId) {
 		let stonejs = {};
 		stonejs.locale = app.modules.stonejs.getLocale();
 		stonejs.catalogs = app.modules.stonejs.listCatalogs();
+		stonejs.guessedUserLanguage = app.modules.stonejs.guessUserLanguage();
 		data.stonejs = stonejs;
 	}
-
-	data.colors = {
-		color1: "#ff00ff",
-		color2: "rgb(10,11,12)",
-		color3: "hsl(5,5,5)",
-		color4: "hsla(6,6,6,0.6)",
-		color5: "rgba(5,5,5,0.5)"
-	};
 
 	// Send back all gathered infos to extension's popup.js
 	chrome.runtime.sendMessage(document.scripts.obsInspector.dataset.dataId ,{query: "obsidianDetails", details: data}, function(response) {}); // Send data back to popup.js
