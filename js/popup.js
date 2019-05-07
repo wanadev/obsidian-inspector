@@ -67,21 +67,21 @@ function createDropdown(data, title) {
 	li.appendChild(span);
 	ul.appendChild(li);
 
-	let ul2 = createUL(data);
+	let ul2 = createUL(data, title);
 	li.appendChild(ul2);
 	div.appendChild(ul);
 
 	return div;
 };
 
-function createUL(data) {
+function createUL(data, title) {
 	let ul = document.createElement("ul");
 	ul.classList.add("nested");
 
 	if(Array.isArray(data)) {
 		if(data.length !== 0 && typeof data[0] === "object" && data[0] !== null){
 			for(let i = 0; i < data.length; i++) {
-				ul = createUL(data[i]);
+				ul = createUL(data[i], title);
 			}
 		} else if(data.length !== 0) {
 			for(let i = 0; i < data.length; i++) {
@@ -89,10 +89,6 @@ function createUL(data) {
 				li.innerHTML = "<span class='property'>" + data[i] + "</span>";
 				ul.appendChild(li);
 			}
-		} else {
-			let li = document.createElement('li');
-			li.innerHTML = "<span class='property'>" + data[i] + "</span><span class='data'>[]</span>";
-			ul.appendChild(li);
 		}
 	} else if((typeof data === "object") && (data !== null)){
 		for(let dat in data) {
@@ -112,7 +108,7 @@ function createUL(data) {
 					}
 					span.classList.remove("caret");
 				} else {
-					let subUl = createUL(data[dat]);
+					let subUl = createUL(data[dat], title);
 					li2.appendChild(subUl);
 				}
 			} else {
