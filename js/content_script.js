@@ -19,6 +19,7 @@ function createListeners() {
 // Function to inject on obsidian page to retrive data
 function getData(extensionId) {
 	if(!window.app){
+		chrome.runtime.sendMessage(document.scripts.obsInspector.dataset.dataId ,{query: "obsidianDetails", details: "noObsidian"}, function(response) {}); // Send data back to popup.js
 		return;
 	}
 	let app = window.app; // get app data from window (thanks to Obsidian debug mode which stores the app in global window)

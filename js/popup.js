@@ -1,7 +1,10 @@
 chrome.tabs.query({active: true, currentWindow: true},
 	function(tabs) { // Send message to content_script when opening popup to retrieve data
 		chrome.tabs.sendMessage(tabs[0].id, {query: "popup_open"}, function(response) {
-			console.log(response)
+			if(!response) {
+				buildNoObidianPopup();
+			}
+			//console.log(response)
 		});
 	}
 );
@@ -16,6 +19,14 @@ function createListeners() {
 		}
 	);
 };
+
+function buildNoObidianPopup() {
+	var body = document.body;
+	document.getElementById('name').innerHTML = "No Obsidian app found.";
+	let p = document.createElement("p");
+	p.innerHTML = "Make sure you've exposed the app in window.app on your app's index.js. If you did, try refreshing the page.";
+	body.appendChild(p);
+}
 
 // Build popup UI from data
 function buildPopup(data) {
@@ -67,7 +78,7 @@ function createDropdown(data, title) {
 	span.classList.add("caret");
 	span.innerHTML = title;
 	if(Array.isArray(data)){
-		span.innerHTML += "(" + data.length + ")";
+		span.innerHTML += " (" + data.length + ") ";
 	}
 	li.appendChild(span);
 	ul.appendChild(li);
