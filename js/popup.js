@@ -47,6 +47,11 @@ function buildPopup(data) {
 		body.appendChild(stonejsDrowdown);
 	}
 
+	if(data.vuejs){
+		let vuejsDrowdown = createDropdown(data.vuejs, "vuejs");
+		body.appendChild(vuejsDrowdown);
+	}
+
 	createDropdownsListeners();
 
 	console.log("Done!");

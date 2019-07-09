@@ -22,6 +22,7 @@ function getData(extensionId) {
 		return;
 	}
 	let app = window.app; // get app data from window (thanks to Obsidian debug mode which stores the app in global window)
+	console.log(app); 
 	
 	let data = {};
 
@@ -88,6 +89,35 @@ function getData(extensionId) {
 		stonejs.catalogs = app.modules.stonejs.listCatalogs();
 		stonejs.guessedUserLanguage = app.modules.stonejs.guessUserLanguage();
 		data.stonejs = stonejs;
+	}
+
+	if (app.modules.vuejs) {
+		let vuejs = {};
+		let keys = Object.keys(app.modules.vuejs.data);
+		for(let i = 0; i < keys.length; i++) {
+			if(keys[i] === "modules") {
+				vuejs.modules = {};
+				for(let j = 0; j < app.modules.vuejs.data.modules.length; j++) {
+					vuejs.modules[app.modules.vuejs.data.modules[j].name] = {};
+					let kekeys = Object.keys(app.modules.vuejs.data.modules[j]);
+					for(let k = 0; k < kekeys.length; k++) {
+						if(kekeys[k] === "methods") {
+							vuejs.modules[app.modules.vuejs.data.modules[j].name].methods = [];
+							let methodKeys = Object.keys(app.modules.vuejs.data.modules[j].methods);
+							for(let m = 0; m < methodKeys.length; m++) {
+								vuejs.modules[app.modules.vuejs.data.modules[j].name].methods.push(app.modules.vuejs.data.modules[j].methods[methodKeys[m]].name);
+							}
+						} else {
+							vuejs.modules[app.modules.vuejs.data.modules[j].name][kekeys[k]] = app.modules.vuejs.data.modules[j][kekeys[k]];
+						}
+					}
+				}
+			} else {
+				vuejs[keys[i]] = app.modules.vuejs.data[keys[i]];
+			}
+		}
+		
+		data.vuejs = vuejs;
 	}
 
 	//console.log("DATA", data);
