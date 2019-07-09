@@ -23,7 +23,6 @@ function getData(extensionId) {
 	}
 	let app = window.app; // get app data from window (thanks to Obsidian debug mode which stores the app in global window)
 	
-	//console.log(app);
 	let data = {};
 
 	data.name = app.name; // Get app's name
@@ -62,11 +61,10 @@ function getData(extensionId) {
 		let structures = {};
 		for(let i = 0; i < structuresElements.length; i++) {
 			if(structuresElements[i].name){
-				structures[structuresElements[i].name] = structuresElements[i];
+				structures[structuresElements[i].name] = structuresElements[i].serialize();
 			} else {
-				structures[structuresElements[i].id] = structuresElements[i];
+				structures[structuresElements[i].id] = structuresElements[i].serialize();
 			}
-			
 		}
 		data.structures = structures;
 	}
@@ -91,6 +89,8 @@ function getData(extensionId) {
 		stonejs.guessedUserLanguage = app.modules.stonejs.guessUserLanguage();
 		data.stonejs = stonejs;
 	}
+
+	//console.log("DATA", data);
 
 	// Send back all gathered infos to extension's popup.js
 	chrome.runtime.sendMessage(document.scripts.obsInspector.dataset.dataId ,{query: "obsidianDetails", details: data}, function(response) {}); // Send data back to popup.js
@@ -157,8 +157,7 @@ function executeInPage(functionToRunInPage, leaveInPage, id) {
     for(var index = 3;index < arguments.length; index++){
         args.push(arguments[index]);
     }
-    newScript.textContent = '(' + functionToRunInPage.toString() + ').apply(null,'
-                            + convertToText(args) + ");";
+    newScript.textContent = '(' + functionToRunInPage.toString() + ').apply(null,' + convertToText(args) + ");";
     (document.head || document.documentElement).appendChild(newScript);
     if(!leaveInPage) {
         document.head.removeChild(newScript);
